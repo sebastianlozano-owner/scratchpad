@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sketch 002 — Option F (E-strip evolution)</title>
+<link rel="stylesheet" href="../themes/default.css" />
+<style>
+  body { padding-bottom: 48px; }
+
+  /* View cart pill base */
+  .view-cart-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    border: 0;
+    width: calc(100% - 32px);
+    margin: 0 16px 18px;
+    padding: 16px 18px;
+    border-radius: var(--radius-full);
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: var(--shadow-pill);
+    cursor: pointer;
+  }
+  .view-cart-pill .chev { opacity: 0.5; }
+
+  /* Variant F — strip stuck under pill (loyalty cream) */
+  .v-f .view-cart-pill,
+  .v-f .cta-pill { margin-bottom: 0; }
+  .v-f .savings-strip-bottom {
+    background: var(--color-reward-soft);
+    color: #5a4a14;
+    text-align: center;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 7px 18px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* Variant F — state controls (sidecar, right of phone) */
+  .v-f-wrap {
+    position: relative;
+    width: 410px;
+    margin: 0 auto;
+  }
+  .state-controls {
+    position: absolute;
+    top: 120px;
+    left: calc(50% + 230px);
+    z-index: 60;
+    background: rgba(26,26,26,0.94);
+    color: white;
+    border-radius: var(--radius-md);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: var(--shadow-lg);
+    font-family: var(--font-sans);
+    width: 200px;
+  }
+  .state-controls .label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 2px;
+  }
+  .state-controls button {
+    background: rgba(255,255,255,0.06);
+    border: 0;
+    color: white;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+    text-align: left;
+  }
+  .state-controls button.active {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+  }
+  .state-controls button:hover:not(.active) {
+    background: rgba(255,255,255,0.12);
+  }
+  .state-controls .hint {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.45;
+    margin-top: 4px;
+  }
+
+  /* Variant F — strip slide-in on scroll */
+  .v-f .savings-strip-bottom {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, margin 0.32s ease;
+  }
+  .v-f .dock.scrolled .savings-strip-bottom {
+    max-height: 40px;
+    opacity: 1;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    margin-top: 8px;
+  }
+
+  /* Animated savings number */
+  .v-f .savings-strip-bottom .amount {
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+    transition: transform 0.18s ease, color 0.18s ease;
+  }
+  .v-f .savings-strip-bottom .amount.bump {
+    transform: scale(1.18);
+    color: #b67c0a;
+  }
+  .v-f .qty-tag {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-size: 13px;
+    font-weight: 700;
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Cart count badge inside pill */
+  .cart-count {
+    background: rgba(0,0,0,0.18);
+    color: var(--color-on-primary);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: var(--radius-full);
+  }
+
+  /* Soft fade above sticky footer */
+  .dock::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 100%;
+    height: 40px;
+    background: linear-gradient(to top, rgba(255,255,255,0.95), rgba(255,255,255,0));
+    pointer-events: none;
+  }
+
+  /* Tile with quantity badge instead of + */
+  .tile .add.qty-badge {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-weight: 700;
+    font-size: 16px;
+  }
+</style>
+</head>
+<body>
+
+<p class="variant-caption">
+  <strong>Option F · E-strip evolution.</strong> Strip slides in when the menu is scrolled. Copy switches from <em>10%</em> to <em>$ saved</em> once savings ≥ $10. Use the side panel to flip between cart states.
+</p>
+
+<!-- ============ F — E-strip evolution ============ -->
+<section class="variant active" id="variant-f">
+ <div class="v-f-wrap">
+  <div class="state-controls">
+    <div class="label">Cart state</div>
+    <button data-state="empty" class="active">Empty cart</button>
+    <button data-state="small">$21 cart · 1 item</button>
+    <button data-state="big">$120 cart · 8 items</button>
+    <div class="hint">Strip appears when you scroll the menu down. Switches from <em>10%</em> to <em>$ saved</em> once savings ≥ $10.</div>
+  </div>
+  <div class="phone v-f">
+    <div class="ios-status">
+      <div class="time"><span>12:11</span><span class="loc-icon">🛏</span></div>
+      <div class="icons">
+        <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+        <span class="wifi">📶</span>
+        <span class="battery"><span class="level"></span></span>
+      </div>
+    </div>
+    <div class="browser-viewport">
+      <div class="phone-scroll" id="f-scroll">
+        <div class="page-header">
+          <div class="brand-tile">HAWKING<br/>BIRD</div>
+          <button class="sign-in">🎁 100 pts ▾</button>
+        </div>
+        <div class="toggle-pill" style="margin-top:10px;">
+          <button class="active">Pickup</button>
+          <button>Delivery</button>
+        </div>
+        <div class="row-select">
+          <span>🕒</span>
+          <span class="label">Pickup time</span>
+          <span class="value" id="f-pickup">Select time…</span>
+          <span>▾</span>
+        </div>
+        <h2 class="section-h">Popular</h2>
+        <div class="tiles">
+          <div class="tile">
+            <div class="img" style="background:#3a3a3a url('https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400') center/cover">
+              <div class="add" id="f-tile-fc">+</div>
+              <div class="qty-tag" id="f-qty-fc" style="display:none;">5</div>
+            </div>
+            <div class="name">Fried Chicken Bowl</div>
+            <div class="price">$15.00</div>
+          </div>
+          <div class="tile">
+            <div class="img" style="background:#c47b3a url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400') center/cover">
+              <div class="add" id="f-tile-tanya">+</div>
+              <div class="qty-tag" id="f-qty-tanya" style="display:none;">1</div>
+            </div>
+            <div class="name">Tanya Special</div>
+            <div class="price">$17.00</div>
+          </div>
+          <div class="tile">
+            <div class="img" style="background:#7d8a6d url('https://images.unsplash.com/photo-1543353071-873f17a7a088?w=400') center/cover">
+              <div class="add" id="f-tile-kmg">+</div>
+              <div class="qty-tag" id="f-qty-kmg" style="display:none;">3</div>
+            </div>
+            <div class="name">KMG &amp; Broth</div>
+            <div class="price">$15.00</div>
+          </div>
+        </div>
+        <div class="cat-pills" style="padding-bottom: 16px;">
+          <div class="cat-pill">🔍</div>
+          <div class="cat-pill active">Popular</div>
+          <div class="cat-pill">Specials</div>
+          <div class="cat-pill">Rice Bowls</div>
+          <div class="cat-pill">Salads</div>
+        </div>
+
+        <h2 class="section-h">Specials</h2>
+        <div class="tiles">
+          <div class="tile">
+            <div class="img" style="background:#a06b3a url('https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=400') center/cover"><div class="add">+</div></div>
+            <div class="name">Hawking Wings</div>
+            <div class="price">$13.00</div>
+          </div>
+          <div class="tile">
+            <div class="img" style="background:#5a7d5a url('https://images.unsplash.com/photo-1559847844-5315695dadae?w=400') center/cover"><div class="add">+</div></div>
+            <div class="name">Green Curry</div>
+            <div class="price">$16.00</div>
+          </div>
+          <div class="tile">
+            <div class="img" style="background:#c4a05a url('https://images.unsplash.com/photo-1574484184081-afea8a62f9f5?w=400') center/cover"><div class="add">+</div></div>
+            <div class="name">Pad See Ew</div>
+            <div class="price">$15.00</div>
+          </div>
+        </div>
+
+        <h2 class="section-h">Rice Bowls</h2>
+        <div class="tiles" style="padding-bottom: 140px;">
+          <div class="tile">
+            <div class="img" style="background:#7a5a3a url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400') center/cover"><div class="add">+</div></div>
+            <div class="name">Crispy Chicken Rice</div>
+            <div class="price">$14.00</div>
+          </div>
+          <div class="tile">
+            <div class="img" style="background:#a08a5a url('https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400') center/cover"><div class="add">+</div></div>
+            <div class="name">Coconut Rice Bowl</div>
+            <div class="price">$13.00</div>
+          </div>
+          <div class="tile">
+            <div class="img" style="background:#8a5a4a url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400') center/cover"><div class="add">+</div></div>
+            <div class="name">Spiced Lamb Bowl</div>
+            <div class="price">$18.00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dock" id="f-dock" style="background:white;">
+        <!-- CTA pill renders dynamically -->
+        <button class="cta-pill" id="f-cta">Start order</button>
+        <div class="savings-strip-bottom" id="f-strip">
+          <span>🍃 You're saving 10% by ordering directly from us.</span>
+        </div>
+      </div>
+    </div>
+    <div class="safari-chrome">
+      <div class="safari-url">
+        <span class="sparkle">✨</span>
+        <span class="url">hawkingbird.com</span>
+        <span class="share">⬆</span>
+      </div>
+      <div class="safari-toolbar">
+        <span class="back">‹</span>
+        <span class="fwd">›</span>
+        <span class="add">+</span>
+        <span class="tabs">28</span>
+        <span class="more">···</span>
+      </div>
+    </div>
+  </div>
+ </div>
+</section>
+
+<script>
+  // ============ Variant F — state cycling + scroll-reveal strip ============
+  const STATES = {
+    empty: {
+      cartTotal: 0,
+      tiles: { fc: 0, tanya: 0, kmg: 0 },
+      pickup: 'Select time…'
+    },
+    small: {
+      cartTotal: 21,
+      tiles: { fc: 0, tanya: 1, kmg: 0 },
+      pickup: 'Tomorrow, 12 PM'
+    },
+    big: {
+      cartTotal: 120,
+      tiles: { fc: 5, tanya: 0, kmg: 3 },
+      pickup: 'Tomorrow, 12 PM'
+    }
+  };
+
+  let lastSavings = 0; // track for count-up animation
+
+  function animateNumber(el, from, to, duration = 450) {
+    const start = performance.now();
+    const delta = to - from;
+    function tick(now) {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+      const v = Math.round(from + delta * eased);
+      el.textContent = '$' + v;
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function applyState(name) {
+    const s = STATES[name];
+    const cta = document.getElementById('f-cta');
+    const strip = document.getElementById('f-strip');
+    const pickup = document.getElementById('f-pickup');
+
+    pickup.textContent = s.pickup;
+
+    // CTA
+    if (s.cartTotal === 0) {
+      cta.textContent = 'Start order';
+    } else {
+      const totalItems = Object.values(s.tiles).reduce((a,b) => a+b, 0);
+      cta.innerHTML = `<span>View cart · ${totalItems} item${totalItems > 1 ? 's' : ''}</span> <span style="opacity:0.5;margin-left:6px;">›</span>`;
+    }
+
+    // Tile +/qty
+    ['fc','tanya','kmg'].forEach(k => {
+      const add = document.getElementById('f-tile-' + k);
+      const tag = document.getElementById('f-qty-' + k);
+      if (s.tiles[k] > 0) {
+        add.style.display = 'none';
+        tag.style.display = 'flex';
+        tag.textContent = s.tiles[k];
+      } else {
+        add.style.display = 'flex';
+        tag.style.display = 'none';
+      }
+    });
+
+    // Savings strip — % until savings >= $10, then $ amount
+    const savings = Math.round(s.cartTotal * 0.10);
+    if (savings >= 10) {
+      strip.innerHTML = `<span>🍃 You're saving <span class="amount">$${lastSavings >= 10 ? lastSavings : savings}</span> by ordering directly from us.</span>`;
+      const amountEl = strip.querySelector('.amount');
+      // Animate from previous savings if we were already in $ mode
+      const fromValue = lastSavings >= 10 ? lastSavings : savings;
+      if (fromValue !== savings) {
+        animateNumber(amountEl, fromValue, savings);
+      } else {
+        amountEl.textContent = '$' + savings;
+      }
+      // bump pop effect
+      requestAnimationFrame(() => {
+        amountEl.classList.add('bump');
+        setTimeout(() => amountEl.classList.remove('bump'), 220);
+      });
+    } else {
+      strip.innerHTML = `<span>🍃 You're saving 10% by ordering directly from us.</span>`;
+    }
+    lastSavings = savings;
+  }
+
+  document.querySelectorAll('.state-controls button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.state-controls button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyState(btn.dataset.state);
+    });
+  });
+
+  // Scroll-reveal: show savings strip after the user scrolls down a bit
+  const fScroll = document.getElementById('f-scroll');
+  const fDock = document.getElementById('f-dock');
+  fScroll.addEventListener('scroll', () => {
+    if (fScroll.scrollTop > 40) {
+      fDock.classList.add('scrolled');
+    } else {
+      fDock.classList.remove('scrolled');
+    }
+  });
+
+  // Initialize F at empty
+  applyState('empty');
+</script>
+</body>
+</html>
