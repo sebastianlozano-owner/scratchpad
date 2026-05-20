@@ -171,6 +171,71 @@
     font-weight: 700;
     font-size: 16px;
   }
+
+  /* Info disclaimer button — sits inside the right edge of the CTA pill.
+     .dock is already position:absolute (from theme), so this positions relative to it. */
+  .info-btn {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    z-index: 10;
+    background: rgba(255,255,255,0.22);
+    border: 0;
+    color: var(--color-on-primary);
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 50%;
+    transition: background 0.15s ease;
+  }
+  .info-btn:hover,
+  .info-btn.open {
+    background: rgba(255,255,255,0.4);
+  }
+
+  /* Disclaimer popover — sits above the dock */
+  .disclaimer-popover {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    right: 14px;
+    width: 220px;
+    background: #1a1a1a;
+    color: rgba(255,255,255,0.92);
+    font-size: 11px;
+    line-height: 1.45;
+    font-weight: 400;
+    text-align: left;
+    padding: 10px 12px;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    opacity: 0;
+    transform: translateY(4px);
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 20;
+  }
+  .disclaimer-popover.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .disclaimer-popover::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    right: 24px;
+    width: 10px;
+    height: 10px;
+    background: #1a1a1a;
+    transform: rotate(45deg);
+  }
 </style>
 </head>
 <body>
@@ -291,6 +356,10 @@
       <div class="dock" id="f-dock" style="background:white;">
         <!-- CTA pill renders dynamically -->
         <button class="cta-pill" id="f-cta">Start order</button>
+        <button class="info-btn" id="f-info" aria-label="About these savings" aria-expanded="false">ⓘ</button>
+        <div class="disclaimer-popover" id="f-disclaimer">
+          Ordering direct avoids third-party service fees (typically 10–15%). Savings shown reflect the difference vs. comparable orders on delivery marketplaces.
+        </div>
         <div class="savings-strip-bottom" id="f-strip">
           <span>🍃 You're saving 10% by ordering directly from us.</span>
         </div>
@@ -423,6 +492,26 @@
 
   // Initialize F at empty
   applyState('empty');
+
+  // Info disclaimer toggle
+  (function () {
+    const btn = document.getElementById('f-info');
+    const popover = document.getElementById('f-disclaimer');
+    if (!btn || !popover) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = popover.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    document.addEventListener('click', (e) => {
+      if (!popover.contains(e.target) && e.target !== btn) {
+        popover.classList.remove('open');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  })();
 </script>
 </body>
 </html>
