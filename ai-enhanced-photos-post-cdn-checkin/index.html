@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>AI Enhanced Photos — post-CDN check-in</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root { --ink:#1c1c1c; --muted:#6b6b6b; --line:#e6e2d9; --bg:#faf8f3;
+           --accent:#b4541f; --good:#2e7d32; --bad:#c0392b; --cream:#f6f1e7; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+          font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:780px; margin:0 auto; padding:48px 24px 80px; }
+  .phase { display:inline-block; font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+            color:var(--accent); border:1px solid var(--accent); border-radius:99px;
+            padding:3px 10px; margin-bottom:16px; }
+  h1 { font-size:30px; line-height:1.2; margin:0 0 8px; }
+  .meta { color:var(--muted); font-size:14px; margin-bottom:24px; }
+  .standfirst { font-size:18px; line-height:1.55; border-left:3px solid var(--accent);
+                 padding:4px 0 4px 18px; margin:0 0 36px; }
+  h2 { font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
+        border-bottom:1px solid var(--line); padding-bottom:8px; margin:44px 0 16px; }
+  table { width:100%; border-collapse:collapse; margin:8px 0 4px; font-size:15px; }
+  caption { caption-side:top; text-align:left; color:var(--muted); font-size:13px;
+             margin-bottom:8px; }
+  th { text-align:right; font-size:12px; text-transform:uppercase; letter-spacing:.04em;
+        color:var(--muted); padding:8px 10px; border-bottom:1px solid var(--line); }
+  th:first-child { text-align:left; }
+  td { text-align:right; padding:9px 10px; border-bottom:1px solid var(--line); }
+  td.m { text-align:left; font-weight:600; }
+  td.lift { font-variant-numeric:tabular-nums; font-weight:600; }
+  td.chance { font-weight:700; }
+  .strong { color:var(--bad); }
+  .dir { color:var(--accent); }
+  .muted { color:var(--muted); }
+  .smalln { color:var(--muted); font-weight:400; font-size:12px; }
+  .cards { display:flex; gap:16px; flex-wrap:wrap; margin:8px 0; }
+  .card { flex:1; min-width:200px; background:var(--cream); border-left:3px solid var(--accent);
+           border-radius:6px; padding:18px 20px; }
+  .card .big { font:600 34px/1 Georgia,serif; margin:6px 0; }
+  .card .lbl { color:var(--muted); font-size:13px; }
+  .chartbox { background:#fff; border:1px solid var(--line); border-radius:8px;
+               padding:16px; margin:12px 0; }
+  p { margin:10px 0; }
+  .va td, .va th { font-size:13px; }
+  footer { margin-top:48px; color:var(--muted); font-size:13px; border-top:1px solid var(--line);
+            padding-top:16px; }
+  .pill { display:inline-block; background:#eee; border-radius:4px; padding:1px 7px;
+           font-size:12px; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="phase">Mid-experiment · focused · directional</span>
+  <h1>AI Enhanced Photos — post-CDN restart check-in</h1>
+  <div class="meta">Flag <span class="pill">ai_enhanced_photo_quality_0526</span> ·
+    window May 28 → Jun 8 PT (~11 days) · updated 2026-06-09 ·
+    <strong>PREVIEW — not yet published</strong></div>
+
+  <p class="standfirst">
+    Now that the enhanced photos serve correctly through the CDN, the treatment shows
+    <strong>no detectable lift</strong>: conversion -0.83%
+    and GMV per user -0.99%,
+    neither significant. This reverses the +2.7% directional read from the earlier, invalid
+    (non-CDN) run — and holds on a contamination-free new-user cohort. This is a directional
+    mid-experiment read; the keep/kill call belongs to the experiment console's Bayesian view.
+  </p>
+
+  <h2>01 · Primary metrics</h2>
+  
+    <table class="metrics">
+      <caption>Within-window cohort (all post-CDN exposures) &middot; n = 789,151 users</caption>
+      <thead><tr><th>Metric</th><th>Control</th><th>Treatment</th>
+        <th>Lift</th><th>Chance treatment wins</th></tr></thead>
+      <tbody><tr><td class='m'>Conversion (per user)</td><td>5.51%</td><td>5.47%</td><td class='lift'>-0.83%</td><td class='chance dir'>18.6%</td></tr><tr><td class='m'>GMV per user</td><td>$2.83</td><td>$2.80</td><td class='lift'>-0.99%</td><td class='chance muted'>20.5%</td></tr><tr><td class='m'>GMV per order</td><td>$48.42</td><td>$48.25</td><td class='lift'>-0.35%</td><td class='chance muted'>n/a</td></tr></tbody>
+    </table>
+  <p style="color:var(--muted);font-size:14px;">
+    Sensitivity — contamination-free cohort (first-ever exposure post-CDN, cross-run
+    re-bucketed users excluded). Same story:
+  </p>
+  
+    <table class="metrics">
+      <caption>New-user cohort &middot; n = 749,944 users</caption>
+      <thead><tr><th>Metric</th><th>Control</th><th>Treatment</th>
+        <th>Lift</th><th>Chance treatment wins</th></tr></thead>
+      <tbody><tr><td class='m'>Conversion (per user)</td><td>4.85%</td><td>4.81%</td><td class='lift'>-0.84%</td><td class='chance muted'>20.4%</td></tr><tr><td class='m'>GMV per user</td><td>$2.50</td><td>$2.48</td><td class='lift'>-0.87%</td><td class='chance muted'>25.1%</td></tr><tr><td class='m'>GMV per order</td><td>$49.98</td><td>$49.71</td><td class='lift'>-0.56%</td><td class='chance muted'>n/a</td></tr></tbody>
+    </table>
+
+  <h2>02 · By device</h2>
+  <table>
+    <thead><tr><th>Device</th><th>Conversion</th><th>Δ</th>
+      <th>GMV / user</th><th>Δ</th></tr></thead>
+    <tbody><tr><td class='m'>Desktop</td><td>4.25% &rarr; 4.11%</td><td class='lift'>-3.39%</td><td>$2.58 &rarr; $2.54</td><td class='lift'>-1.38%</td></tr><tr><td class='m'>Mobile</td><td>5.89% &rarr; 5.87%</td><td class='lift'>-0.36%</td><td>$2.90 &rarr; $2.87</td><td class='lift'>-1.07%</td></tr><tr><td class='m'>Tablet <span class='smalln'>(small n)</span></td><td>5.77% &rarr; 6.30%</td><td class='lift'>+9.16%</td><td>$3.20 &rarr; $3.48</td><td class='lift'>+8.85%</td></tr></tbody>
+  </table>
+  <p style="color:var(--muted);font-size:14px;">
+    Desktop — the strongest positive segment in the invalid run (+3.96% conversion) — is now
+    the most negative. A plausible read: with photos rendering correctly everywhere, the
+    earlier desktop "edge" was an artifact of the broken non-CDN serving rather than a real
+    large-screen effect.
+  </p>
+
+  <h2>03 · By traffic channel</h2>
+  <table>
+    <thead><tr><th>Channel</th><th>GMV / session</th><th>Δ</th></tr></thead>
+    <tbody><tr><td class='m'>Campaigns (Email, SMS, & More)</td><td>$6.19 &rarr; $5.98</td><td class='lift'>-3.36%</td></tr><tr><td class='m'>Direct</td><td>$2.71 &rarr; $2.70</td><td class='lift'>-0.21%</td></tr><tr><td class='m'>SEO & Referral</td><td>$4.23 &rarr; $4.20</td><td class='lift'>-0.66%</td></tr></tbody>
+  </table>
+  <p style="color:var(--muted);font-size:14px;">Every channel is flat. No segment carries a positive.</p>
+
+  <h2>04 · Daily lift trajectory</h2>
+  <div class="chartbox"><canvas id="dailyChart" height="150"></canvas></div>
+  <p style="color:var(--muted);font-size:14px;">
+    Day-by-day relative lift oscillates around zero with no trend — consistent with noise
+    around a null effect, not a decaying novelty lift.</p>
+
+  <h2>05 · Coverage &amp; instrumentation</h2>
+  <div class="cards">
+    <div class="card"><div class="lbl">Exposure coverage (orders)</div>
+      <div class="big" style="color:var(--good)">99.2%</div>
+      <div class="lbl">of web orders at cohort brands from exposed users</div></div>
+    <div class="card"><div class="lbl">Variant balance</div>
+      <div class="big">394,007/395,144</div>
+      <div class="lbl">control / treatment · no SRM (p≈0.20)</div></div>
+    <div class="card"><div class="lbl">Restart re-bucketing</div>
+      <div class="big">9,956</div>
+      <div class="lbl">cross-run variant flippers (1.3%) — excluded in sensitivity</div></div>
+  </div>
+
+  <h2>06 · Method &amp; assumptions</h2>
+  <p style="font-size:14px;">
+    The first run (launched May 13) was invalidated because treatment photos did not serve
+    through a CDN. Eng rewrote item photos to CDN-backed URLs on May 27 and restarted on the
+    same flag ~5pm PT. Because the flag is reused, the window starts May 28 PT to drop all
+    pre-CDN exposures; assignments are deduped to first exposure within the window (0 in-window
+    flips). Primary metrics join exposed users to post-exposure orders; significance shown as
+    Bayesian chance treatment beats control. Channel cut is session-grain on the bot-filtered
+    cohort.</p>
+  <table class="va">
+    <thead><tr><th>Assumption</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="m">CDN cutover May 27 (host static-content.owner.com)</td><td>Verified (item docs)</td></tr>
+      <tr><td class="m">Exact serving-flip minute (~5pm PT)</td><td>Inferred — confirm with eng</td></tr>
+      <tr><td class="m">Window clean of pre-CDN contamination</td><td>Verified (0 in-window flips; new-user cohort agrees)</td></tr>
+      <tr><td class="m">Exposure coverage supports "across cohort brands"</td><td>Verified (99.2% of GMV)</td></tr>
+      <tr><td class="m">New-vs-repeat session cut</td><td>Known artifact — excluded</td></tr>
+    </tbody>
+  </table>
+
+  <footer>
+    Directional mid-experiment read · stopping decision belongs to the experiment console's
+    Bayesian posterior. Source: analytics-hub
+    explorations/schef/OLO/experiments/ai-enhanced-photos/analyses/2026-06-09-mid-experiment-focused-post-cdn
+  </footer>
+</div>
+
+<script>
+const ctx = document.getElementById('dailyChart');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['05-28', '05-29', '05-30', '05-31', '06-01', '06-02', '06-03', '06-04', '06-05', '06-06', '06-07'],
+    datasets: [
+      { label: 'GMV lift (%)', data: [3.46, -3.62, 6.22, -1.84, -2.73, -2.37, -4.82, -0.3, -1.32, 0.49, -2.55], borderColor: '#b4541f',
+         backgroundColor: 'rgba(180,84,31,.08)', tension:.3, fill:true, pointRadius:3 },
+      { label: 'Orders lift (%)', data: [4.34, -4.47, 1.52, -0.56, -4.6, -2.14, -0.79, 3.16, -1.58, 3.33, -2.3], borderColor: '#6b6b6b',
+         borderDash:[5,4], tension:.3, pointRadius:2 }
+    ]
+  },
+  options: {
+    responsive:true, plugins:{ legend:{ position:'bottom' } },
+    scales:{ y:{ title:{ display:true, text:'Relative lift (%)' },
+              grid:{ color:'#f0ece3' } },
+              x:{ grid:{ display:false } } }
+  }
+});
+</script>
+</body>
+</html>
