@@ -66,12 +66,11 @@
   .pill.search { padding: 6px 10px; }
   .pill.active { background: var(--pill-active); color: white; }
 
-  /* VARIANT — category TILES (image + label) */
+  /* VARIANT — category TILES (image + label), grid layout */
   .section-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding: 4px 16px 6px; }
-  .tile-rail { display: flex; gap: 12px; overflow-x: auto; padding: 2px 16px 14px; scrollbar-width: none; }
-  .tile-rail::-webkit-scrollbar { display: none; }
-  .tile { flex: 0 0 auto; width: 104px; text-align: center; }
-  .tile .img { width: 104px; height: 104px; border-radius: 14px; position: relative; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04); }
+  .tile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 2px 16px 16px; }
+  .tile { text-align: center; }
+  .tile .img { width: 100%; aspect-ratio: 1 / 1; border-radius: 14px; position: relative; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04); }
   .tile .img .count { position: absolute; right: 6px; top: 6px; background: rgba(17,17,17,0.72); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 999px; }
   .tile .lbl { font-size: 12px; font-weight: 700; margin-top: 6px; line-height: 1.2; color: #111; }
   .tile.active .lbl { color: var(--accent); }
@@ -116,7 +115,7 @@
 
 <header class="page-header">
   <h1>Category Tiles — Menu Scannability</h1>
-  <p>Control mirrors today's live mweb menu: a horizontal strip of text-only category pills. Variant replaces it with a rail of visual category tiles (image + label + item count) at the top of the menu, so guests can scan and tap-to-jump to a section instead of scrolling a long item list. Example brand: Talkin' Tacos (13-category menu — the fleet median).</p>
+  <p>Control mirrors today's live mweb menu: a horizontal strip of text-only category pills. Variant replaces it with a grid of visual category tiles (image + label + item count) at the top of the menu, so every category is visible at a glance and guests can tap-to-jump to a section instead of scrolling a long item list. Example brand: Talkin' Tacos (13-category menu — the fleet median).</p>
 </header>
 
 <section class="lab-grid">
@@ -191,7 +190,7 @@
   <!-- VARIANT — category tiles -->
   <div class="col">
     <div class="col-label variant"><span class="tag">VARIANT</span> Category tiles (image + label)</div>
-    <div class="col-note">A rail of visual category tiles replaces the pill strip: each tile shows a representative photo, the category name, and item count. Tap a tile to jump to that section. Gives every category a scannable, appetizing landmark at the top of the menu.</div>
+    <div class="col-note">A grid of visual category tiles replaces the pill strip: each tile shows a representative photo, the category name, and item count. The whole menu's structure is visible at a glance — tap a tile to jump to that section. Gives every category a scannable, appetizing landmark at the top of the menu.</div>
 
     <div class="device variant">
       <div class="device-top">
@@ -206,7 +205,7 @@
       </div>
 
       <div class="section-eyebrow">Browse by category</div>
-      <div class="tile-rail">
+      <div class="tile-grid">
         <div class="tile active"><div class="img t-popular"><span class="count">8</span></div><div class="lbl">Popular</div></div>
         <div class="tile"><div class="img t-starters"><span class="count">6</span></div><div class="lbl">Starters</div></div>
         <div class="tile"><div class="img t-tacos"><span class="count">14</span></div><div class="lbl">Tacos</div></div>
@@ -252,10 +251,10 @@
     <div class="changes">
       <b>Change</b>
       <ul>
-        <li>Text pills → <b>visual category tiles</b> (photo + label + item count)</li>
+        <li>Text pills → a <b>grid of visual category tiles</b> (photo + label + item count)</li>
+        <li>All categories visible at once — no horizontal scroll to discover sections</li>
         <li>Tap a tile to jump straight to that section's anchor</li>
         <li>Every category gets an appetizing, high-scan-weight landmark at the top of the menu</li>
-        <li>Matches the DoorDash / UberEats "browse by category" carousel convention</li>
       </ul>
     </div>
   </div>
